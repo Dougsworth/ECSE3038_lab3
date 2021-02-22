@@ -1,25 +1,33 @@
-###
-
-GET  http://localhost:5000/fruit
+# **using Postman alternative route client extension to test http request**  
 
 ###
-POST http://localhost:5000/fruit/
+GET  http://localhost:5000/data
+
+#_____________________________________________________________________
+
+###
+POST http://localhost:5000/data
 content-type: application/json
 
 {
-    "color": "yellow",
-    "name": "pineapple",
-    "sugar_content": 10,
-    "seed_num": 9
+    "location": "Scitech",
+    "lat": "106.395049302910",
+    "long": "-14.193891093893",
+    "percentage_full": "95"
 }
+#_____________________________________________________________________
 
 ###
-DELETE http://localhost:5000/fruit/6032fe038eb68f519994b716
+DELETE http://localhost:5000/data
+
+#_____________________________________________________________________
 ###
-PATCH http://localhost:5000/fruit/6032f6388eb68f519994b713
+PATCH http://localhost:5000/data/603336e14f08f5ef65e65597
 content-type: application/json
 
 {
 
-    "sugar_content": 110
+     "percentage_full": "55"
 }
+
+#_____________________________________________________________________
