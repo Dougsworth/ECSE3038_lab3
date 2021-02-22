@@ -1,0 +1,25 @@
+###
+
+GET  http://localhost:5000/fruit
+
+###
+POST http://localhost:5000/fruit/
+content-type: application/json
+
+{
+    "color": "yellow",
+    "name": "pineapple",
+    "sugar_content": 10,
+    "seed_num": 9
+}
+
+###
+DELETE http://localhost:5000/fruit/6032fe038eb68f519994b716
+###
+PATCH http://localhost:5000/fruit/6032f6388eb68f519994b713
+content-type: application/json
+
+{
+
+    "sugar_content": 110
+}
