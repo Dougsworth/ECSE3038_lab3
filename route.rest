@@ -10,24 +10,25 @@ POST http://localhost:5000/data
 content-type: application/json
 
 {
-    "location": "Scitech",
-    "lat": "106.395049302910",
-    "long": "-14.193891093893",
-    "percentage_full": "95"
+    "location": "Engineering",
+    "lat": "106.39504930221123",
+    "long": "-14.193891034893",
+    "percentage_full": "100"
 }
 #_____________________________________________________________________
 
 ###
-DELETE http://localhost:5000/data
+DELETE http://localhost:5000/data/6033374f4f08f5ef65e65599
+
 
 #_____________________________________________________________________
 ###
-PATCH http://localhost:5000/data/603336e14f08f5ef65e65597
+PATCH http://localhost:5000/data/603337504f08f5ef65e6559a
 content-type: application/json
 
 {
-
-     "percentage_full": "55"
+    "location": "SO-SCI",
+    "percentage_full": "1000"
 }
 
 #_____________________________________________________________________
