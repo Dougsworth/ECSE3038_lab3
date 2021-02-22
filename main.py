@@ -1,47 +1,47 @@
-from flask import Flask, request, jsonify, json
-from flask_pymongo import PyMongo
-from marshmallow import Schema, fields, ValidationError
-from bson.json_util import dumps
-from json import loads
 
+from json import loads
+from bson.json_util import dumps
+from flask_pymongo import PyMongo
+from flask import Flask, request, jsonify, json
+from marshmallow import Schema, fields, ValidationError
 
 app = Flask(__name__)
 app.config["MONGO_URI"] = "mongodb+srv://dougyd:Pd-tkSKDbMg3fNs@cluster0.5rdhy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 mongo = PyMongo(app)
 
-class FruitSchema(Schema):
-  name = fields.String(required=True)
-  sugar_content = fields.Float(required=True)
-  color = fields.String(required=True)
-  seed_num = fields.Integer(required=True)
+class TankSchema(Schema):
+  location = fields.String(required=True)
+  lat = fields.Float(required=True)
+  long = fields.Float(required=True)
+  percentage_full = fields.Integer(required=True)
 
-@app.route("/fruit")
-def get_fruits():
-  fruits = mongo.db.fruits.find()
-  return jsonify(loads(dumps(fruits)))
+@app.route("/data")
+def get_data():
+  tanks = mongo.db.tanks.find()
+  return jsonify(loads(dumps(tanks)))
 
 
-@app.route("/fruit", methods=["POST"])
-def add_fruit():
+@app.route("/data", methods=["POST"])
+def add_data():
   try:
-    newFruit = FruitSchema().load(request.json)
-    fruit_id = mongo.db.fruits.insert_one(newFruit).inserted_id
-    fruit = mongo.db.fruits.find_one(fruit_id)
-    return loads(dumps(fruit))
+    newTank = TankSchema().load(request.json)
+    Tank_id = mongo.db.tanks.insert_one(newTank).inserted_id
+    retTank = mongo.db.tanks.find_one(Tank_id)
+    return loads(dumps(retTank))
   except ValidationError as ve:
     return ve.messages, 400
 
-@app.route("/fruit/<ObjectId:id>", methods=["PATCH"])
-def update_fruit(id):
-  mongo.db.fruits.update_one({"_id": id},{ "$set": request.json})
+@app.route("/data/<ObjectId:id>", methods=["PATCH"])
+def update_data(id):
+  mongo.db.tanks.update_one({"_id": id},{ "$set": request.json})
 
-  fruit = mongo.db.fruits.find_one(id)
+  tank = mongo.db.tanks.find_one(id)
 
-  return loads(dumps(fruit))
+  return loads(dumps(tank))
 
-@app.route("/fruit/<ObjectId:id>", methods=["DELETE"])
-def delete_fruit(id):
-  result = mongo.db.fruits.delete_one({"_id": id})
+@app.route("/data/<ObjectId:id>", methods=["DELETE"])
+def delete_data(id):
+  result = mongo.db.tanks.delete_one({"_id": id})
 
   if result.deleted_count == 1:
     return {
@@ -52,6 +52,60 @@ def delete_fruit(id):
     return {
       "success": False
     }, 400
+
+#________________________________________________________________________
+#Profile Routes
+@app.route('/profile')
+def profile_get():
+    global person_D
+    success = {
+        "success" :True,
+        "data" : person_D
+    }
+    return jsonify(success)
+
+@app.route('/profile', methods = ['POST'])
+def profile_post():
+    tVar = datetime.datetime.now(tz=pytz.timezone('Jamaica'))
+    tVartoString = tVar.isoformat()
+    userD = request.json
+    
+    if len(userD) > 0:
+       
+        global person_D
+        person_D = userD
+        
+        userD["last_updated"] = tVartoString
+        success = {
+            "successs":True,
+            "data": userD
+        }
+        return jsonify(success)
+    else:
+        return redirect(url_for("profile_get"))
+
+@app.route('/profile', methods = ["PATCH"])
+def profile_patch():
+    global person_D 
+
+    tVar = datetime.datetime.now(tz=pytz.timezone('Jamaica'))
+    tVartoString = tVar.isoformat()
+   
+   
+    userD = request.json   
+   
+    if len(person_D) > 0:
+        
+        person_D = userD
+        
+        userD["last_updated"] = tVartoString
+        success = {
+        "successs":True,
+        "data": userD
+        }            
+        return jsonify(success)
+    else:
+        return redirect(url_for("profile_get"))
 
 
 if __name__ == "__main__":
