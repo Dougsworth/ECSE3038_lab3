@@ -12,7 +12,6 @@ CORS(app)
 
 app.config["MONGO_URI"] = "mongodb+srv://dougyd:Pd-tkSKDbMg3fNs@cluster0.5rdhy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 mongo = PyMongo(app)
-
 ppl_D = {}
 
 
@@ -55,6 +54,8 @@ def data_delete(id):
         success = { "success":False}
         return jsonify(success), 400
 
+
+#__________________________________________________________________________________________________________________
 #Profile  Routes 
 @app.route('/profile')
 def profile_get():
@@ -67,17 +68,12 @@ def profile_get():
 
 @app.route('/profile', methods = ['POST'])
 def profile_post():
-    #obtain time stamp
     tVar = datetime.datetime.now(tz=pytz.timezone('Jamaica'))
     tVartoString = tVar.isoformat()
-    #obtain json object from the request object
     person_Data = request.json
-    #do the validation 
     if len(person_Data) > 0:
-        #update global dictionary to show that a user has logged in
         global ppl_D
         ppl_D = person_Data
-        #append time stamp to local dictionary and prepare for return
         person_Data["last_updated"] = tVartoString
         success = {
             "successs":True,
@@ -107,7 +103,6 @@ def profile_patch():
         return jsonify(success)
     else:
         return redirect(url_for("profile_get"))
-
 
 if __name__ == "__main__":
     app.run(debug = True)
