@@ -13,7 +13,7 @@ CORS(app)
 app.config["MONGO_URI"] = "mongodb+srv://dougyd:Pd-tkSKDbMg3fNs@cluster0.5rdhy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 mongo = PyMongo(app)
 
-userData = {}
+ppl_D = {}
 
 
 class TankSchema(Schema):
@@ -58,30 +58,30 @@ def data_delete(id):
 #Profile  Routes 
 @app.route('/profile')
 def profile_get():
-    global userData
+    global ppl_D
     success = {
         "success" :True,
-        "data" : userData
+        "data" : ppl_D
     }
     return jsonify(success)
 
 @app.route('/profile', methods = ['POST'])
 def profile_post():
     #obtain time stamp
-    tVar = datetime.datetime.now(tz=pytz.timezone('America/Jamaica'))
+    tVar = datetime.datetime.now(tz=pytz.timezone('Jamaica'))
     tVartoString = tVar.isoformat()
     #obtain json object from the request object
-    userD = request.json
+    person_Data = request.json
     #do the validation 
-    if len(userD) > 0:
+    if len(person_Data) > 0:
         #update global dictionary to show that a user has logged in
-        global userData
-        userData = userD
+        global ppl_D
+        ppl_D = person_Data
         #append time stamp to local dictionary and prepare for return
-        userD["last_updated"] = tVartoString
+        person_Data["last_updated"] = tVartoString
         success = {
             "successs":True,
-            "data": userD
+            "data": person_Data
         }
         return jsonify(success)
     else:
@@ -89,21 +89,20 @@ def profile_post():
 
 @app.route('/profile', methods = ["PATCH"])
 def profile_patch():
-    global userData 
+    global ppl_D 
 
-    tVar = datetime.datetime.now(tz=pytz.timezone('America/Jamaica'))
+    tVar = datetime.datetime.now(tz=pytz.timezone('Jamaica'))
     tVartoString = tVar.isoformat()
     
-    userD = request.json   
+    person_Data = request.json   
     
-    if len(userData) > 0:
+    if len(ppl_D) > 0:
        
-        userData = userD
-        
-        userD["last_updated"] = tVartoString
+        ppl_D = person_Data
+        person_Data["last_updated"] = tVartoString
         success = {
         "successs":True,
-        "data": userD
+        "data": person_Data
         }            
         return jsonify(success)
     else:
